@@ -1,5 +1,5 @@
-# Internet ICPC 2024 (Tehran Site)
-Hello and welcome to the 2024 internet ICPC West Asia (Tehran Site), where our university's icpc team ([Hakim Sabzevari University](https://en.hsu.ac.ir/)) will be selected for the main competition (at Sharif University of Technology).
+# ICPC 2024 Asia Taichung Regional Contest 
+Hello and welcome to another icpc mirror contest! you can see our solutions for this contest here.
 
 **For ease of coding, try using the [template](./rahmat/template.cpp) file in addition to the following.**
 
@@ -21,7 +21,7 @@ Each person should only work in their assigned folder to avoid **conflicts**.
 ## Initial Setup
 1. Clone the repository:
     ```bash
-    git clone https://github.com/ctrl-alt-Defeat-icpc/iicpc2024
+    git clone https://github.com/ctrl-alt-Defeat-icpc/ATR2024
     ```
 2. you should write your solutions in your own folder!
 3. Ensure the .gitignore file is in place to keep unnecessary files out of the repository.
