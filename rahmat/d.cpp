@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll long long
+#define ll int
 #define pi pair<int, int>
 const int N = 1e5 + 5;
-const ll oo = 1e18 + 7;
+const ll oo = 1e9 + 7;
 int n, m;
 pi s, t;
 queue<pi> q;
@@ -16,10 +16,10 @@ int checkPre(vector<int> &pre) {
 
 void newDis(pi v, vector<vector<char>> &matrix, vector<vector<ll>> &dis, queue<pi> &q, vector<vector<vector<int>>> &pre, int ni, int nj, int dir) {
         if(ni < 0 || ni >= n || nj < 0 || nj >= m || matrix[ni][nj] == '#') return; // invalid area or wall
+        // if(matrix[ni][nj] == '#') return; // wall
         int oi = v.first, oj = v.second; // old row and column
         ll disHere = dis[oi][oj];
         if(checkPre(pre[oi][oj]) == dir) {
-            // cout << v.first << ":" << v.second << "=>" << ni << ":" << nj << " dir:" << dir << endl;
             if(disHere + 3 < dis[ni][nj]) {
                 dis[ni][nj] = disHere + 3;
                 q.push({ni, nj});
@@ -59,9 +59,6 @@ void Main() {
     vector<vector<char>> matrix(n, vector<char>(m));
     vector<vector<ll>> dis(n, vector<ll>(m, oo));
     vector<vector<vector<int>>> pre(n, vector<vector<int>>(m, vector<int>(3, -1)));
-    // for(int i = 0; i < n; i++, cout << endl)
-    //     for(int j = 0; j < m; j++)
-    //         cout << pre[i][j][0] << ':' << pre[i][j][1] << ":" << pre[i][j][2] << ":" << ' ';
     
     for(int i = 0; i < n; i++)
         for(int j = 0; j < m; j++) {
@@ -72,12 +69,6 @@ void Main() {
     bfs(s, matrix, dis, pre);
     if(dis[t.first][t.second] == oo) cout << -1 << endl;
     else cout << dis[t.first][t.second] << endl;
-
-    // cout << "---------------------\n";
-    // for(int i = 0; i < n; i++, cout << endl)
-    //     for(int j = 0; j < m; j++)
-    //         if(dis[i][j] == oo) cout << -1 << ' ';
-    //         else cout << dis[i][j] << ' ';
 }
 
 int main()
