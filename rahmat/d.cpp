@@ -14,7 +14,7 @@ int checkPre(vector<int> &pre) {
     return -1;
 }
 
-void newDis(pi v, vector<vector<char>> &matrix, vector<vector<ll>> &dis, queue<pi> &q, vector<vector<vector<int>>> &pre, int ni, int nj, int dir) {
+void newDis(pi v, vector<vector<char>> &matrix, vector<vector<int>> &dis, queue<pi> &q, vector<vector<vector<int>>> &pre, int ni, int nj, int dir) {
         if(ni < 0 || ni >= n || nj < 0 || nj >= m || matrix[ni][nj] == '#') return; // invalid area or wall
         // if(matrix[ni][nj] == '#') return; // wall
         int oi = v.first, oj = v.second; // old row and column
