@@ -1,10 +1,10 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define ll int
+#define ll long long
 #define pi pair<int, int>
 const int N = 1e5 + 5;
-const ll oo = 1e9 + 7;
+const int oo = 1e9 + 7;
 int n, m;
 pi s, t;
 queue<pi> q;
@@ -18,7 +18,7 @@ void newDis(pi v, vector<vector<char>> &matrix, vector<vector<ll>> &dis, queue<p
         if(ni < 0 || ni >= n || nj < 0 || nj >= m || matrix[ni][nj] == '#') return; // invalid area or wall
         // if(matrix[ni][nj] == '#') return; // wall
         int oi = v.first, oj = v.second; // old row and column
-        ll disHere = dis[oi][oj];
+        int disHere = dis[oi][oj];
         if(checkPre(pre[oi][oj]) == dir) {
             if(disHere + 3 < dis[ni][nj]) {
                 dis[ni][nj] = disHere + 3;
@@ -38,7 +38,7 @@ void newDis(pi v, vector<vector<char>> &matrix, vector<vector<ll>> &dis, queue<p
 }
 
 /// pre: -1: not matter, 0: right, 1: down, 2: left, 3: up
-void bfs(pi start, vector<vector<char>> &matrix, vector<vector<ll>> &dis, vector<vector<vector<int>>> &pre) {
+void bfs(pi start, vector<vector<char>> &matrix, vector<vector<int>> &dis, vector<vector<vector<int>>> &pre) {
     dis[start.first][start.second] = 0;
     q.push(start);
     
@@ -57,7 +57,7 @@ void Main() {
     cin >> n >> m;
 
     vector<vector<char>> matrix(n, vector<char>(m));
-    vector<vector<ll>> dis(n, vector<ll>(m, oo));
+    vector<vector<int>> dis(n, vector<int>(m, oo));
     vector<vector<vector<int>>> pre(n, vector<vector<int>>(m, vector<int>(3, -1)));
     
     for(int i = 0; i < n; i++)
