@@ -3,77 +3,54 @@ using namespace std;
 
 #define ll long long
 #define pi pair<int, int>
-const int N = 1e5 + 5;
-const int oo = 1e9 + 7;
-int n, m;
-pi s, t;
-queue<pi> q;
+const int N = 2e5 + 5;
+const int MAXLINES = 1e4 + 5;
+const int oo = 1e9;
 
-int checkPre(vector<int> &pre) {
-    if(pre[0] == pre[1] && pre[1] == pre[2]) return pre[0];
-    return -1;
-}
+int n, m, ans;
+string s[MAXLINES];
+pair<int, int> beg, ed;
+int dis[N][4][4];
+bool vis[N][4][4];
+queue<array<int, 4>> q;
 
-void newDis(pi v, vector<vector<char>> &matrix, vector<vector<int>> &dis, queue<pi> &q, vector<vector<vector<int>>> &pre, vector<vector<int>> &nxt, int ni, int nj, int dir) {
-        if(ni < 0 || ni >= n || nj < 0 || nj >= m || matrix[ni][nj] == '#') return; // invalid area or wall
-        // if(matrix[ni][nj] == '#') return; // wall
-        int oi = v.first, oj = v.second; // old row and column
-        int disHere = dis[oi][oj];
-        if(checkPre(pre[oi][oj]) == dir) {
-            if(disHere + 3 < dis[ni][nj] || (disHere + 3 == dis[ni][nj] && dir != pre[ni][nj][2] && nxt[ni][nj] != dir && nxt[ni][nj] != pre[ni][nj][2])) {
-                dis[ni][nj] = disHere + 3;
-                q.push({ni, nj});
-                nxt[oi][oj] = dir;
-                pre[ni][nj][0] = -1;
-                pre[ni][nj][1] = pre[ni][nj][2] = dir;
-            }
-        }
-        else if(disHere + 1 < dis[ni][nj] || (disHere + 1 == dis[ni][nj] && dir != pre[ni][nj][2] && nxt[ni][nj] != dir && nxt[ni][nj] != pre[ni][nj][2])) {
-            dis[ni][nj] = disHere + 1;
-            q.push({ni, nj});
-            nxt[oi][oj] = dir;
-            pre[ni][nj][0] = pre[oi][oj][1];
-            pre[ni][nj][1] = pre[oi][oj][2];
-            pre[ni][nj][2] = dir;
-        }
-
-}
-
-/// pre: -1: not matter, 0: right, 1: down, 2: left, 3: up
-void bfs(pi start, vector<vector<char>> &matrix, vector<vector<int>> &dis) {
-    dis[start.first][start.second] = 0;
-    q.push(start);
-
-    
-    vector<vector<int>> nxt(n, vector<int>(m, -1));
-    vector<vector<vector<int>>> pre(n, vector<vector<int>>(m, vector<int>(3, -1)));
-
-    while(!q.empty()) {
-        pi v = q.front();
-        q.pop();
-        
-        newDis(v, matrix, dis, q, pre, nxt, v.first, v.second + 1, 0);
-        newDis(v, matrix, dis, q, pre, nxt, v.first + 1, v.second, 1);
-        newDis(v, matrix, dis, q, pre, nxt, v.first, v.second - 1, 2);
-        newDis(v, matrix, dis, q, pre, nxt, v.first - 1, v.second, 3);
-    }
-}
+const int dx[] = {0, 1, 0, -1};
+const int dy[] = {1, 0, -1, 0};
+// directions: down(0) | right(1) | up(2) | left(3)
 
 void Main() {
     cin >> n >> m;
+    for(int i = 1; i <= n; i++) { // input
+        cin >> s[i]; s[i] = " " + s[i]; // for starting from 1
+        for(int j = 1; j <= m; j++)
+            if(s[i][j] == 'S') beg.first = i, beg.second = j;
+            else if(s[i][j] == 'T') ed.first = i, ed.second = j;
+    }
 
-    vector<vector<char>> matrix(n, vector<char>(m));
-    vector<vector<int>> dis(n, vector<int>(m, oo));
-    
-    for(int i = 0; i < n; i++)
-        for(int j = 0; j < m; j++) {
-            cin >> matrix[i][j];
-            if(matrix[i][j] == 'S') s.first = i, s.second = j;
-            else if(matrix[i][j] == 'T') t.first = i, t.second = j;
+    q.push({beg.first, beg.second, 0, 0}); // start from S location | direction isn't manner | num of duplicate previues dir 0
+    vis[beg.first * m + beg.second][0][0] = 1;
+    while(!q.empty()) {
+        auto current = q.front(); q.pop();
+        int x = current[0], y = current[1], dir = current[2], p = current[3];
+        for(int i = 0; i < 4; i++) {  // iterate all directions
+            int xx = x + dx[i]; // new x position
+            int yy = y + dy[i]; // new y position
+            int pp = (i == dir ? p + 1 : 1); // new number of duplicate previues direction
+            if(s[xx][yy] == '#' || pp > 3 || vis[xx * m + yy][i][pp]) // invalid or visited position
+                continue;
+            dis[xx * m + yy][i][pp] = dis[x * m + y][dir][p] + 1;
+            vis[xx * m + yy][i][pp] = 1; // new position visited
+            q.push({xx, yy, i, pp});
         }
-    bfs(s, matrix, dis);
-    if(dis[t.first][t.second] == oo) cout << -1 << endl;
-    else cout << dis[t.first][t.second] << endl;
+    }
+
+    ans = oo;
+    for(int i = 0; i < 4; i++) // iterate all directions
+        for(int j = 0; j <= 3; j++) // iterate for all dup. pre. dir. (can 0, 1, 2, 3)
+            if(vis[ed.first * m + ed.second][i][j]) // only visited position can be answer
+                ans = min(ans, dis[ed.first * m + ed.second][i][j]);
+
+    cout << (ans > 1e8 ? -1 : ans) << '\n'; // print answer
 }
 
 int main() {
